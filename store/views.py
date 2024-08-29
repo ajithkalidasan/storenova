@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import Product
+from .models import Product, Category
 from . import forms
 
 
@@ -58,3 +58,21 @@ def register_user(request):
 
     else:
         return render(request, "store/register.html", {"form": form})
+    
+
+def product(request,pk):
+
+    product = Product.objects.get(id= pk)
+    return render(request, "store/product.html", {"product": product})
+
+def category(request,foo):
+    # Replace hyphen with space
+    foo = foo.replace("-", " ")
+    try:
+        category = Category.objects.get(name=foo)
+        products = Product.objects.filter(category=category)
+        context = {"category": category, "products": products}
+        return render(request, "store/category.html", context)
+    except:
+        messages.error(request, "Category does not exist")
+        return redirect("home")
