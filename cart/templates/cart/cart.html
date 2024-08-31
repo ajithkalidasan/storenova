@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Cart</h1>
+            <p class="lead fw-normal text-white-50 mb-0">View Your cart</p>
+        </div>
+    </div>
+</header>
+<div class="container px-4 px-lg-5 my-5">
+  
+  {% if cart_products %}
+    
+
+         
+    {% for product in cart_products %}
+
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description|slice:"100" }}</p>
+              {% if product.is_sale %}
+              <strike>
+                ${{ product.price }}
+                </strike>
+                &nbsp;
+                ${{ product.sale_price }}
+              {% else %}
+              ${{ product.price }}
+              {% endif %}
+              
+            </div>
+          </div>
+        </div>
+      </div>
+        
+    {% endfor %}
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Your cart is empty
+      </div>
+        
+    {% endif %}
+</div>
+
+
+{% endblock content %}
