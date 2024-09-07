@@ -59,6 +59,23 @@ def register_user(request):
     else:
         return render(request, "store/register.html", {"form": form})
     
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        user_form = forms.UpdateUserForm(request.POST or None,instance=current_user)
+        
+        if user_form.is_valid():
+            user_form.save()
+            login(request, current_user)
+            messages.success(request, "Profile Updated")
+            return redirect("home")
+        
+    
+        return render(request, "store/update_user.html", {"user_form": user_form})
+    else:
+        messages.error(request, "Login Required")
+        return redirect("login")
+    
 
 def product(request,pk):
 
@@ -76,3 +93,9 @@ def category(request,foo):
     except:
         messages.error(request, "Category does not exist")
         return redirect("home")
+    
+def category_summary(request):
+    categories  = Category.objects.all()
+    
+    context = {"categories": categories}
+    return render(request, "store/category_summary.html", context)
